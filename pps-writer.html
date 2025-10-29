@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PPPs to flashcards</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      color: #cdd6f4;
+      background-color: #1e1e2e;
+    }
+    .header, .footer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 10vh;
+      width: 100%;
+    }
+   .btn-container {
+      display: flex;
+      align-items: center;
+    }
+    .container {
+      display: flex;
+      height: 80vh;
+      width: 100%;
+    }
+    .textbox {
+      flex: 1;
+      border: 1px solid #ccc;
+      padding: 10px;
+      box-sizing: border-box;
+      resize: none;
+      font-family: monospace;
+      font-size: 16px;
+      color: #cdd6f4;
+      background-color: #1e1e2e;
+    }
+   .btn {
+     border-radius: 45;
+     background-color: #007bff;
+     color: white;
+     border: none;
+     padding: 10px 20px;
+     border-radius: 6px;
+     font-size: 16px;
+     cursor: pointer;
+    }
+   .btn:hover {
+     background-color: #0056b3;
+   }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1> Vocab verbs to flashcards </h1>
+  </div>
+  <div class="container">
+    <textarea class="textbox" placeholder="Paste verbs here..."></textarea>
+    <div class="btn-container">
+      <button class="btn">Convert</button>
+    </div>
+    <textarea class="textbox"></textarea>
+  </div>
+  <div class="footer">
+  </div>
+</body>
+</html>

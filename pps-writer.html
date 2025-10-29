@@ -18,16 +18,49 @@
       height: 10vh;
       width: 100%;
     }
+    .input-txt, .output-txt {
+	flex: 1;
+        height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+    }
+    .container {
+      display: flex;
+      height: 80vh;
+      width: 100%;
+    }
+    .left-container, .right-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
    .btn-container {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
       align-items: center;
     }
-    .container {
+    .input-options, .output-options {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+        margin: 5px;
+    }
+    .input-options form, .output-options form {
       display: flex;
-      height: 80vh;
-      width: 100%;
+      align-items: center;
+      gap: 5px;
+    }
+    .input-options p, .output-options p {
+      margin: 0;
+    }
+    .input-options input[type="radio"],
+    .output-options input[type="radio"] {
+      vertical-align: middle;
+      margin: 5px;
+    }
+    .input-options input[type="text"] {
+      vertical-align: top;
     }
     .textbox {
       flex: 1;
@@ -60,16 +93,49 @@
   <div class="header">
     <h1> Latin vocab verbs to flashcards </h1>
   </div>
+
   <div class="container">
-    <textarea class="input-txt textbox" placeholder="Paste verbs here..."></textarea>
+
+    <div class="left-container">
+	<div class="input-options">
+	    <p> Meaning separator: </p>
+	    <form>
+		<label><input type="radio" name="input-separator" value="tab" checked> tab </label>
+		<label><input type="radio" name="input-separator" value="dash"> - </label>
+		<label><input type="radio" name="input-separator" value="colon"> : </label>
+		<label>
+		<input type="radio" name="input-separator" value="other" id="otherRadio"> Other  
+		<input type="text" id="otherText" style="width: 15px;">
+		</label>
+	    </form>
+	</div>
+    
+	<textarea class="input-txt textbox" placeholder="Paste verbs here..."></textarea>
+    </div>
+
     <div class="btn-container">
       <button class="btn convert-btn">Convert</button>
       <button class="btn reset-btn">Reset</button>
+      <button class="btn copy-btn">Copy</button>
     </div>
-    <textarea class="output-txt textbox"></textarea>
+
+    <div class="right-container">
+	<div class="output-options">
+	    <p> Meaning separator: </p>
+	    <form>
+		<label><input type="radio" name="output-separator" value="tab" checked> tab </label>
+		<label><input type="radio" name="output-separator" value="colon"> : </label>
+		<label><input type="radio" name="output-separator" value="dash"> - </label>
+	    </form>
+	</div>
+	<textarea class="output-txt textbox"></textarea>
+    </div>
+
   </div>
+
   <div class="footer">
   </div>
+
   <script src='./app.js'></script>
 </body>
 </html>

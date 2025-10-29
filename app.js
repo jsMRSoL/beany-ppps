@@ -3,6 +3,24 @@ const output_txt_box = document.querySelector('.output-txt');
 
 const convert_btn = document.querySelector('.convert-btn');
 const reset_btn = document.querySelector('.reset-btn');
+const copy_btn = document.querySelector('.copy-btn');
+
+const otherRadio = document.querySelector('#otherRadio');
+const otherText = document.querySelector('#otherText');
+
+// function to update textbox state
+function updateOtherText() {
+  otherText.disabled = !otherRadio.checked;
+}
+// initial state
+updateOtherText();
+
+otherRadio.addEventListener('change', updateOtherText);
+// listen for changes on all radios in the group
+const radios = document.querySelectorAll('input[name="input-separator"]');
+radios.forEach(radio => {
+  radio.addEventListener('change', updateOtherText);
+});
 
 const irregular_eng_vbs = {
   "awake": {"base":"awake","3rd-pers-pres":"awakes","past":"awoke","past-pt":"awoken","pres-pt":"awaking"},
@@ -123,6 +141,7 @@ const irregular_eng_vbs = {
 
 convert_btn.addEventListener('click', convertInputTxt);
 reset_btn.addEventListener('click', resetTxtBoxes);
+copy_btn.addEventListener('click', copyOutputTxt);
 
 function convertInputTxt() {
     // console.log("Input box contains:\n%s", input_txt_box.value);  
@@ -135,7 +154,7 @@ function convertInputTxt() {
 
     flashcard_lines = lines_list
 	.filter(line => line !== "")
-	.map(line => process_line(line));
+	.map(line => processLine(line));
 
     output_txt_box.value = flashcard_lines.join('\n');
 }
@@ -155,28 +174,72 @@ function resetTxtBoxes() {
     // txtBoxes[0].value = dummy_txt;
 }
 
-function process_line(line) {
-    if (!line.includes(":")) return "Bad line!";
+function copyOutputTxt() {
+    const text = output_txt_box.value;
+    navigator.clipboard.writeText(text)
+	.then(() => console.log('Copied to clipboard'))
+	.catch(err => console.error('Failed to copy:', err));
+}
+
+function getInputSeparator() {
+    const selected = document.querySelector(
+	'input[name="input-separator"]:checked'
+    ).value;
+
+    switch (selected) {
+	case "tab":
+	    return '\t';
+	case "dash":
+	    return '-';
+	case "colon":
+	    return ':';
+	default:
+	    return otherText.value;
+    }
+}
+
+function getOutputSeparator() {
+    const selected = document.querySelector(
+	'input[name="output-separator"]:checked'
+    ).value;
+
+    switch (selected) {
+	case "colon":
+	    return ': ';
+	case "dash":
+	    return ' - ';
+	default:
+	    return '\t';
+    }
+}
+
+function processLine(line) {
+    const separator = getInputSeparator();
+    // console.log(`separator is: ${separator}`);
+
+    if (!line.includes(separator)) return "Bad line!";
     const [vocab_entry, meaning] = line
-	  .split(':')
+	  .split(separator)
 	  .map(part => part.trim());
     // console.log(`${vocab_entry}`);
     // console.log(`${meaning}`);
+
     const entry = irregular_eng_vbs[meaning] ?? create_regular_entry(meaning);
     // console.log(entry);
     const pps = vocab_entry.split(',').map(part => part.trim());
 
     const templates = [
-	(pp, e) => `${pp}\tI ${e["base"]}`,
-	(pp, e) => `${pp}\tto ${e["base"]}`,
-	(pp, e) => `${pp}\tI ${e["past"]}`,
-	(pp, e) => {
+	(pp, e, sep) => `${pp}${sep}I ${e["base"]}`,
+	(pp, e, sep) => `${pp}${sep}to ${e["base"]}`,
+	(pp, e, sep) => `${pp}${sep}I ${e["past"]}`,
+	(pp, e, sep) => {
 	    if (pp.endsWith('m')) pp = pp.slice(0, -1) + 's';
-	    return `${pp}\thaving been ${e["past-pt"]}`;
+	    return `${pp}${sep}having been ${e["past-pt"]}`;
 	}
     ];
 
-    return pps.map((pp, i) => templates[i](pp, entry)).join('\n');
+    const outputSeparator = getOutputSeparator();
+    return pps.map((pp, i) => templates[i](pp, entry, outputSeparator)).join('\n');
 }
 
 function create_regular_entry(meaning) {

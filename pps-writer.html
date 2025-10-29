@@ -20,6 +20,8 @@
     }
    .btn-container {
       display: flex;
+      flex-direction: column;
+      justify-content: space-around;
       align-items: center;
     }
     .container {
@@ -44,6 +46,7 @@
      color: white;
      border: none;
      padding: 10px 20px;
+     margin: 5px;
      border-radius: 6px;
      font-size: 16px;
      cursor: pointer;
@@ -55,16 +58,18 @@
 </head>
 <body>
   <div class="header">
-    <h1> Vocab verbs to flashcards </h1>
+    <h1> Latin vocab verbs to flashcards </h1>
   </div>
   <div class="container">
-    <textarea class="textbox" placeholder="Paste verbs here..."></textarea>
+    <textarea class="input-txt textbox" placeholder="Paste verbs here..."></textarea>
     <div class="btn-container">
-      <button class="btn">Convert</button>
+      <button class="btn convert-btn">Convert</button>
+      <button class="btn reset-btn">Reset</button>
     </div>
-    <textarea class="textbox"></textarea>
+    <textarea class="output-txt textbox"></textarea>
   </div>
   <div class="footer">
   </div>
+  <script src='./app.js'></script>
 </body>
 </html>

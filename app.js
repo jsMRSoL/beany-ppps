@@ -167,12 +167,12 @@ function process_line(line) {
     const pps = vocab_entry.split(',').map(part => part.trim());
 
     const templates = [
-	(pp, e) => `${pp} : I ${e["base"]}`,
-	(pp, e) => `${pp} : to ${e["base"]}`,
-	(pp, e) => `${pp} : I ${e["past"]}`,
+	(pp, e) => `${pp}\tI ${e["base"]}`,
+	(pp, e) => `${pp}\tto ${e["base"]}`,
+	(pp, e) => `${pp}\tI ${e["past"]}`,
 	(pp, e) => {
 	    if (pp.endsWith('m')) pp = pp.slice(0, -1) + 's';
-	    return `${pp} : having been ${e["past-pt"]}`;
+	    return `${pp}\thaving been ${e["past-pt"]}`;
 	}
     ];
 
@@ -180,13 +180,41 @@ function process_line(line) {
 }
 
 function create_regular_entry(meaning) {
-    const stem = meaning.endsWith('e') ? meaning.slice(0, -1) : meaning;
+    if ((meaning.endsWith('y')) && (!meaning.endsWith('oy'))) {
+	const stem =meaning.slice(0, -1) + "i";
+	
+	return {
+	    "base": meaning,
+	    "3rd-pers-pres": `${meaning}es`,
+	    "past": `${stem}ed`,
+	    "past-pt": `${stem}ed`,
+	    "pres-pt": `${meaning}ing`
+	};
+	
+    } else if (meaning.endsWith('come')) {
+	const entry = irregular_eng_vbs["come"];
+	const prefix = meaning.slice(0, -4);
+	return new_entry = Object.fromEntries(
+	    Object.entries(entry).map(([key, value]) => [key, prefix + value])
+	);
 
-    return {
-	"base": meaning,
-	"3rd-pers-pres": `${meaning}s`,
-	"past": `${stem}ed`,
-	"past-pt": `${stem}ed`,
-	"pres-pt": `${stem}ing`
-    };
+    } else if (meaning.includes(' ')) {
+	const [head, ...rest] = meaning.split(' ');
+	const tail = rest.join(' ');
+	const entry = irregular_eng_vbs[head] ?? create_regular_entry(head);
+	return new_entry = Object.fromEntries(
+	    Object.entries(entry).map(([key, value]) => [key, value + ' ' + tail])
+	);
+
+    } else {
+	const stem = meaning.endsWith('e') ? meaning.slice(0, -1) : meaning;
+
+	return {
+	    "base": meaning,
+	    "3rd-pers-pres": `${meaning}s`,
+	    "past": `${stem}ed`,
+	    "past-pt": `${stem}ed`,
+	    "pres-pt": `${stem}ing`
+	};
+    }
 }
